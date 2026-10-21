@@ -1,0 +1,5 @@
+[
+  {"question": "Replace this with a factual question whose answer is in your documents"},
+  {"question": "Add 20-30 questions in total, written from your own documents"},
+  {"question": "Include a few questions that your documents do NOT answer, to test refusal"}
+]
