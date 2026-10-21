@@ -1,6 +1,4 @@
-"""Robust Retrieval-Augmented Generation (RAG) pipeline utilizing LangChain, 
-FAISS vector storage, and HuggingFace Cross-Encoder reranking.
-"""
+
 
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -29,7 +27,7 @@ EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 RERANKER_MODEL_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 FALLBACK_RESPONSE = "I couldn't find that in the uploaded documents."
 
-# Prompt Templates
+
 STRICT_RAG_PROMPT = ChatPromptTemplate.from_messages([
     (
         "system",
@@ -67,7 +65,7 @@ def initialize_llm() -> Any:
         )
 
 def load_source_document(file_path: Union[str, Path], display_name: Optional[str] = None) -> List[Any]:
-    """Load a PDF or DOCX file and inject metadata tags for tracking source origin."""
+    
     path = Path(file_path)
     suffix = path.suffix.lower()
     
@@ -88,7 +86,7 @@ def load_source_document(file_path: Union[str, Path], display_name: Optional[str
 
 
 def format_citation_label(document: Any) -> str:
-    """Generate a clean citation label containing source name and page number if available."""
+
     page_number = document.metadata.get("page")
     source_name = document.metadata.get("source", "document")
     
@@ -98,7 +96,7 @@ def format_citation_label(document: Any) -> str:
 
 
 class DocumentQAEngine:
-    """Core RAG engine handling document ingestion, semantic search, reranking, and generation."""
+    
     
     def __init__(self, chunk_size: int = 1000, chunk_overlap: int = 150) -> None:
         self.embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL_NAME)
@@ -111,14 +109,7 @@ class DocumentQAEngine:
         self.vectorstore: Optional[FAISS] = None
 
     def add_documents(self, file_registry: List[Tuple[Union[str, Path], Optional[str]]]) -> int:
-        """Process, chunk, and index a batch of files into the vector store.
         
-        Args:
-            file_registry: A list of tuples containing (file_path, optional_display_name).
-            
-        Returns:
-            The total number of text chunks successfully indexed.
-        """
         raw_documents = []
         for file_path, display_name in file_registry:
             raw_documents.extend(load_source_document(file_path, display_name))
@@ -135,7 +126,7 @@ class DocumentQAEngine:
         return len(chunks)
 
     def retrieve_context(self, query: str, candidate_k: int = 12, top_n: int = 4, use_reranker: bool = True) -> List[Any]:
-        """Retrieve relevant document chunks using similarity search followed by cross-encoder reranking."""
+       
         if not self.vectorstore:
             return []
             
@@ -157,7 +148,7 @@ class DocumentQAEngine:
         return [doc for doc, _ in ranked_results[:top_n]]
 
     def _synthesize_standalone_query(self, query: str, chat_history: Optional[List[Tuple[str, str]]]) -> str:
-        """Convert a follow-up query into a context-independent standalone question."""
+
         if not chat_history:
             return query
             
@@ -172,11 +163,7 @@ class DocumentQAEngine:
         chat_history: Optional[List[Tuple[str, str]]] = None, 
         use_baseline_mode: bool = False
     ) -> Tuple[str, List[Any]]:
-        """Generate a cited response for a user query based on indexed documents.
-        
-        Returns:
-            A tuple of (generated_answer_string, list_of_retrieved_source_documents).
-        """
+      
         if self.vectorstore is None:
             return "Please upload and process documents before asking questions.", []
             
