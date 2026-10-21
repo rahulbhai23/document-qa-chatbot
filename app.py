@@ -1,8 +1,4 @@
-"""DocuMind - Document Q&A assistant, built with Streamlit components only.
 
-Multi-file upload, real-time Q&A, source citations, conversation memory.
-The page renders immediately; the AI models load only when first needed.
-"""
 import os
 import tempfile
 
@@ -23,7 +19,6 @@ SUGGESTIONS = [
 
 @st.cache_resource(show_spinner=False)
 def get_engine():
-    # Imported lazily so the page renders before the heavy models load.
     return DocumentQAEngine()
 
 
@@ -33,7 +28,6 @@ def load_engine():
 
 
 def make_sources(docs):
-    """Convert retrieved LangChain documents into plain dicts for display."""
     return [{"label": format_citation_label(d), "text": d.page_content} for d in docs]
 
 
@@ -116,7 +110,7 @@ with st.sidebar:
             st.session_state.messages = []
             st.rerun()
 
-# ---------------- header ----------------
+
 st.title(APP_NAME)
 st.caption("Ask questions about your PDF and Word files and get answers backed by cited sources.")
 
