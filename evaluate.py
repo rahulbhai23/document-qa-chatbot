@@ -1,14 +1,4 @@
-"""Measure hallucination with RAGAS: baseline RAG vs. the full pipeline.
 
-Usage:
-    python evaluate.py --docs docs/report.pdf docs/notes.docx --questions eval_questions.json
-
-eval_questions.json is a list of {"question": "..."} items (20-30 factual questions
-whose answers are in your documents; include a few that are NOT answerable).
-
-Faithfulness = share of answer claims supported by the retrieved context.
-Hallucination rate = 1 - faithfulness. Quote the numbers YOUR run produces.
-"""
 import argparse
 import json
 
